@@ -10,6 +10,8 @@ library(tidyr)
 
 print ("STRUDEL FIDELITY RESEARCH")#Learning curve plot: values must be assigned as such - x= c(1,2,..)
 
+#Create scatter plot using ggplot 
+
 print ('#VERSIONS 1, PLOT A (small) LEARNING CURVE')
 
 #Formula 
@@ -30,7 +32,7 @@ summary(df$Y)
 
 #Plot Graph
 ggplot() + 
-  geom_line(aes(data,Y/2),color='black') + 
+  geom_line(aes(df$data,df$Y), color='black') + 
   
   ylab('Learning Efforts')+xlab('Performance Measures (# of Trials)') +
   
@@ -92,4 +94,5 @@ ggplot() +
 # [1] http://michaelminn.net/tutorials/r-normal-rank-order/
 # [2] https://www.tutorialspoint.com/r/r_normal_distribution.htm
 # [3] https://stackoverflow.com/questions/15589601/print-string-and-variable-contents-on-the-same-line-in-r
+# [4] http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html
 
