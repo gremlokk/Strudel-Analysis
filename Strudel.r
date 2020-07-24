@@ -10,14 +10,12 @@ library(tidyr)
 
 options(max.print=1000000)
 
-print ("STRUDEL FIDELITY RESEARCH")
-
 #PRELIMINARY PLOTS -------------------------------------------------------------
 
 #RESPONSE FUNCTION GRAPH
 df = data.frame(
   id = c(1:50),
-  values = runif(50, min=0, max=50)#Generates Random Values N=2000, i = 0-61
+  values = runif(50, min=0, max=10)#Generates Random Values N=2000, i = 0-61
 )
 
 respFunc = function(x) {
@@ -30,23 +28,26 @@ respFunc = function(x) {
 
 Y = apply(df, 1, respFunc)
 
-ggplot(data = df, aes(x = id, y = Y, color=Y)) +
+#Create function data visualization 1-2000
+#Takes paramater of log
+ggplot(data = df, aes(x = id, y = Y, color=Y)) + 
   labs(x = "Response Time(s)",y = "Learning Rate") +
   geom_line() +
-  geom_point() + 
-  ggtitle("Response Function Graph") +
+  geom_point() +
+  ggtitle("Response Function Graph") +  
   theme_classic()
 
-#print(Y)
-#summary(Y)
+print(Y)
+summary(Y)
 
 #RANDOM GRAPHS
-randomGraph = data.frame(
-  learning_efforts = runif(10, min=0, max=10),
-  performance =  (learning_efforts)^(1/2)
+efforts = runif(10, min=0, max=10)
+rGraph = data.frame(
+  eff = efforts,
+  Y = c(1:10)
 )
 
-ggplot(data = randomGraph, aes(x = learning_efforts, y = performance, color=learning_efforts)) +
+ggplot(data = rGraph, aes(x = efforts, y = Y, color=Y)) +
   labs(x = "Learning Efforts (# Attempts)",y = "Performance") +
   geom_line() +
   geom_point() + 
@@ -59,7 +60,7 @@ v1 = data.frame(
   performance =  (c(1:50))^(1/2) #sqrt function x^1/2
 )
 
-ggplot(data = v1, aes(x = learning_efforts, y = performance)) +
+ggplot(data = v1, aes(x = learning_efforts, y = performance, color = learning_efforts)) +
   labs(x = "Learning Efforts (# Attempts)",y = "Performance") +
   geom_line() +
   geom_point() + 
@@ -69,15 +70,30 @@ ggplot(data = v1, aes(x = learning_efforts, y = performance)) +
 #LEARNING CURVE 1-2000
 v2 = data.frame(
   learning_efforts = c(0:2000),
-  performance =  (c(0:2000))^(1/2) #sqrt function x^1/2
+  performance =  (c(0:2000))^-(1/2) #sqrt function x^1/2
 )
 
-ggplot(data = v2, aes(x = learning_efforts, y = performance, color = performance)) +
+ggplot(data = v2, aes(x = learning_efforts, y = performance, color=performance)) +
   labs(x = "Learning Efforts (# Attempts)",y = "Performance") +
   geom_line() +
   geom_point() + 
   ggtitle("Learning Curve 1-2000") +
   theme_grey()
+
+
+#LN(X) Graph
+v3 = data.frame(
+  learning_efforts = c(0:50),
+  performance =  log(c(0:50))
+)
+
+ggplot(data = v3, aes(x = learning_efforts, y = performance, color=performance)) +
+  labs(x = "Learning Efforts (# Attempts)",y = "Performance") +
+  geom_line() +
+  geom_point() + 
+  ggtitle("LN(X) Plot") +
+  theme_grey() 
+
 #END----------------------------------------------------------------------------
 
 
@@ -91,6 +107,9 @@ trial = 5
 
 #FORMULAS-----------------------------------------------------------------------
 
+#Recommendations by Martin: 7/24/20
+#hifi + lofi should have their own matrix/ data-structure to generate numbers... 
+#Only apply learning rate to learning task not fixed tasks
 respTime = fixedTasks + (learnedTasks*((trial)^-alpha))
 
 #FIGURES------------------------------------------------------------------------
@@ -127,6 +146,7 @@ ggplot(fig1, aes(ui_combo,time_per_trial, group = 1, color=ui_combo))+
   ggtitle("Figure 1") +
   theme_gray()
 
+#results order plot in alphabetical order, we want to keep natural order
 ggplot(fig2, aes(ui_combo,time_per_trial, group = 1, color=ui_combo))+
   geom_line(color='black',size=1) +
   geom_point(size = 4) +
@@ -142,9 +162,12 @@ ggplot(fig3, aes(x=time_blocks)) +
   labs(x = "Response Time(s)",y = "10-Min Blocks") +
   ggtitle("Figure 3: HiFi and LoFi Curves") +
   theme_bw()
+
 #END----------------------------------------------------------------------------
 
-
+#Updates: Make more
+#Ask for user input
+#Create visualization functions for graphing (takes some data,visualize it)
 
 #SOURCES------------------------------------------------------------------------
 # [1] https://www.nngroup.com/articles/power-law-learning/#:~:text=Definition%3A%20The%20power%20law%20of,shape%20of%20a%20power%20law.
@@ -155,5 +178,5 @@ ggplot(fig3, aes(x=time_blocks)) +
 # [6] https://www.mathsisfun.com/sets/functions-common.html
 # [7] https://www.valamis.com/hub/learning-curve
 # [8] https://www.statmethods.net/management/functions.html
-# [9]
+# [9] 
 # [10]
