@@ -15,7 +15,26 @@ knitr::opts_chunk$set(echo = TRUE)
 <h3> 08/14/2020 </h3>
 </center>
 
-#### **NOTES**
+#### **PROJECT DESCRIPTION**
+  What is the effect of level of simulation fidelity on learning
+  and then on performance in the target task? We consider an
+  example of an electronic maintenance training system with
+  two levels of fidelity: a high fidelity (HiFi) simulation that
+  basically takes as much time as the real-world task and a low
+  fidelity (LoFi) simulation with minimal delays and many
+  actions removed or reduced in fidelity and time. The LoFi
+  simulation initially takes about one quarter of the time, and
+  thus starts out providing about four times as many practice
+  trials in a given time period. The time to perform the task
+  modifies the learning curves for each system. The LoFi curve
+  has a lower intercept and a steeper slope. For a small number
+  of practice trials, this makes a significant difference. For
+  longer time periods, the differences between low and high
+  fidelity get smaller. Learners that move from low to high
+  appear to not be adversely affected. We note factors that
+  could influence this transfer (i.e., subtasks included in each
+  simulation), and how this approach could be extended
+  <br><br>
  This document is a visual analysis of the Strudel data models provided
  in the Ritter paper: fidelity on learning.
 
@@ -23,8 +42,474 @@ knitr::opts_chunk$set(echo = TRUE)
 
 <br>
 
-##### **MAJOR UPDATES**
+### Libraries
+```{r message=FALSE}
+library(dplyr)
+library(ggplot2)
+library(tidyr)
 
+options(digits =2, max.print=1000000)
+```
+
+## Results {.tabset}
+
+### FIG 1
+<center>
+```{r echo=FALSE}
+# This plot displays a simple learning curve plot of 1-10 trials using the response function from strudel analysis.
+
+# Variables for response function
+alpha = 0.02
+fixedTasks = 26
+learnedTasks = 32.75
+
+# Data frame is the data structure used to store data for visualize plots 
+learning_curve = data.frame(
+  labels = c(1:10),
+  respFunc = fixedTasks + (learnedTasks*((c(1:10))^-alpha))
+)
+
+ggplot(learning_curve, aes(x = labels, y = respFunc)) +
+  labs(x = "Trials", y = "Response Time(s)",
+       title = "Learning Curve Plot", 
+       subtitle = "Figure 1",
+       caption = "Figure 1: This plot displays a simple learning curve plot of 1-10\n trials using the response function from strudel analysis.") +
+  geom_line(color="green", size=1) + 
+  geom_point(size = 2) +
+  ylim(57, 60) +
+  scale_x_continuous(breaks=c(1:10)) + 
+  theme(axis.text=element_text(size=14,face="bold"),axis.title=element_text(size=14,face="bold")) +
+  theme(legend.title=element_blank(), 
+  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
+  plot.subtitle = element_text(color = "blue", hjust = 0.5),
+  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
+
+```
+</center>
+
+### FIG 2
+<center>
+``` {r echo=FALSE}
+# This plot displays a learning curve plot of 1-2000 trials using the response function   from strudel analysis.
+
+# Data frame is the data structure used to store data for visualize plots 
+larger_learning_curve = data.frame(
+  labels = c(1:2000),
+  respFunc = fixedTasks + (learnedTasks*((c(1:2000))^-alpha))
+)
+
+# Visualization and construction of plot
+ggplot(larger_learning_curve, aes(x = labels, y = respFunc)) + 
+  labs(x = "Trials", y = "Response Time(s)",
+       title = "Larger Learning Curve Plot (1-2000 Datapoints)", 
+       subtitle = "Figure 2",
+       caption = "Figure 2: This plot displays a learning curve plot of 1-2000\n trials using the response function from strudel analysis.") +
+  geom_line() +
+  geom_point(size=1) +
+  theme(axis.text=element_text(size=14,face="bold"),axis.title=element_text(size=14,face="bold")) +
+  theme(legend.title=element_blank(), 
+  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
+  plot.subtitle = element_text(color = "blue", hjust = 0.5),
+  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
+
+```
+</center>
+
+### FIG 3
+<center>
+``` {r echo=FALSE}
+# This plot displays a Hifi and Lofi plot from strudel analysis.
+
+# Data frame is the data structure used to store data for visualize plots 
+two_line_plot = data.frame( #Use function to generate plots
+  time_blocks = c(1:10),
+  lofi_resp_time = c(11.8,5.5,4.3,3.8,3.5,3.2,3.1,2.9,2.8,2.7),
+  hifi_resp_time = c(13.75,7.807,5.544,4.756,4.316,4.022,3.805,3.635,3.497,3.382)
+)
+
+# Visualization and construction of plot
+ggplot(two_line_plot, aes(x=time_blocks)) +
+  geom_line(aes(y=lofi_resp_time, color="Lofi"), size = 1)+ 
+  geom_line(aes(y=hifi_resp_time,color="Hifi"),size=1) + 
+  labs(x = "Trials", y = "Response Time(s)",
+       title = "HiFi and LoFi Curves", 
+       subtitle = "Figure 3",
+       caption = "Figure 3: This plot displays a Hifi and Lofi plots.") + 
+  scale_x_continuous(breaks=c(1:10)) +
+  theme(axis.text=element_text(size=14,face="bold"),axis.title=element_text(size=14,face="bold")) +
+  theme(legend.title=element_blank(), 
+  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
+  plot.subtitle = element_text(color = "blue", hjust = 0.5),
+  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
+```
+</center>
+
+### FIG 4
+<center>
+``` {r echo=FALSE}
+# This plot displays a 3 learning curve plots of 1-10 trials using the response function and data from strudel analysis.
+
+# Variables for response function
+alpha = .20
+fixedTasks = 26
+learnedTasks = 32.75
+
+# Data frame is the data structure used to store data for visualize plots 
+multi_learning_curve = data.frame(
+  labels = c(1:10),
+  respFunc = fixedTasks + (learnedTasks*((c(1:10))^-alpha)),#Function working for this
+  respFunc2 = c(40.5,37.4,36,35.2,34.6,34.1,33.8,33.5,33.2,33),#Change to working function
+  respFunc3 = c(23.3,14.5,13.1,12.4,12,11.7,11.5,11.3,11.1,11)#Change to working function
+)
+
+# Visualization and construction of plot
+ggplot(multi_learning_curve, aes(x = labels)) + 
+  geom_line(aes(y = respFunc, color="High", group= 1), size = 2) +
+  geom_line(aes(y = respFunc2, color="Low", group= 2), size = 2) +
+  geom_line(aes(y = respFunc3, color="Low-to-High", group= 3), size = 2) +
+  labs(x = "Trials", y = "Response Time (s)",
+       title = "Multi-Complex Learning Curve Plot", 
+       subtitle = "Figure 4",
+       caption = "Figure 4: This plot displays a 3 learning curve plots of 1-10 trials.") + 
+  scale_x_continuous(breaks=c(1:10)) +
+  theme(axis.text=element_text(size=14,face="bold"),axis.title=element_text(size=14,face="bold")) +
+  theme(legend.title=element_blank(), 
+  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
+  plot.subtitle = element_text(color = "blue", hjust = 0.5),
+  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
+
+```
+</center>
+
+### FIG 5
+<center>
+``` {r echo=FALSE}
+# This plot displays fault mixed learning plot using the data from strudel analysis.
+
+# Data frame is the data structure used to store data for visualize plots 
+fault_mixed_learning_plot = data.frame(
+  labels = c("Low", "High", "HHap", "RWhu", "RWHap"),
+  data = c(23.3,58.75,0,0,0)
+)
+
+sorted_labels = factor(fault_mixed_learning_plot$labels,levels = c("Low", "High", "HHap", "RWhu", "RWHap"))# Sorts labels using factor function 
+
+# Visualization and construction of plot
+ggplot(fault_mixed_learning_plot, aes(x = sorted_labels, y = data, color=sorted_labels, group= 1)) + 
+  geom_line() +
+  geom_point(size = 4) +
+  labs(x = "Interface Type",y = "Time Per Trial",
+       title = "Simple Fault Mixed Learning Plot", 
+       subtitle = "Figure 5",
+       caption = "Figure 5: This plot displays fault mixed learning plot.") + 
+  theme(axis.text=element_text(size=14,face="bold"),axis.title=element_text(size=14,face="bold")) +
+  theme(legend.title=element_blank(), 
+  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
+  plot.subtitle = element_text(color = "blue", hjust = 0.5),
+  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
+```
+</center>
+
+### FIG 6
+<center>
+``` {r echo=FALSE}
+# This plot displays a second fault mixed learning plot using the data from strudel analysis.
+
+# Data frame is the data structure used to store data for visualize plots 
+fault_mixed_learning_plot_v2 = data.frame(
+  labels = c("Low", "High", "HHap", "RWhu", "RWHap"),
+  data = c(2.6,1,0,0,0)
+)
+
+sorted_labels = factor(fault_mixed_learning_plot_v2$labels,levels = c("Low", "High", "HHap", "RWhu", "RWHap"))# Sorts labels using factor function 
+
+# Visualization and construction of plot
+ggplot(fault_mixed_learning_plot_v2, aes(x = sorted_labels, y = data, color=sorted_labels, group= 1)) + 
+  geom_line() +
+  labs(x = "Interface Type", y = "Time Per Trial",
+       title = "Simple Fault Mixed Learning Plot v2", 
+       subtitle = "Figure 6",
+       caption = "Figure 6: This plot displays a second fault mixed learning plot.") + 
+  geom_point(size = 4) +
+  theme(axis.text=element_text(size=14,face="bold"),axis.title=element_text(size=14,face="bold")) +
+  theme(legend.title=element_blank(), 
+  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
+  plot.subtitle = element_text(color = "blue", hjust = 0.5),
+  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
+
+```
+</center>
+
+### FIG 7
+<center>
+``` {r echo=FALSE}
+# This plot displays an interface combination plot using the data from strudel analysis.
+
+rand_values = runif(2000, min=0, max=61)#Generates Random Values N=2000, i = 0-61
+
+# Data frame is the data structure used to store data for visualize plots 
+ui_combo_plot = data.frame(
+  id = c(1:8),
+  ui_combo = 	c("Lhu","LHap","Mhu","Mhap","Hhu","HHap","RWhu","RWHap"),		
+  time_per_trial = c(11.75,12.95,15.95,15.95,13.75,35.4,60.25,60.25), 
+  stringsAsFactors = FALSE
+)
+sorted_labels = factor(ui_combo_plot$ui_combo,levels = c("Lhu","LHap","Mhu","Mhap","Hhu","HHap","RWhu","RWHap"))
+
+# Visualization and construction of plot
+ggplot(ui_combo_plot, aes(sorted_labels,time_per_trial, group = 1, color=sorted_labels))+
+  geom_line(color='black',size=1) +
+  geom_point(size = 4) +
+  labs(x = "User Interface Combination", y = "Times Per Trial (s)",
+       title = "User Interface Combination Plot", 
+       subtitle = "Figure 7",
+       caption = "Figure 7: This plot displays an interface combination plot.") + 
+  theme(axis.text=element_text(size=14,face="bold"),axis.title=element_text(size=14,face="bold")) +
+  theme(legend.title=element_blank(), 
+  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
+  plot.subtitle = element_text(color = "blue", hjust = 0.5),
+  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
+```
+</center>
+
+### FIG 8
+<center>
+``` {r echo=FALSE}
+# This plot displays an second interface combination plot using the data from strudel analysis.
+
+# Data frame is the data structure used to store data for visualize plots 
+ui_combo_plot_v2 = data.frame(
+  id = c(1:8),
+  ui_combo = 	c("Lhu","LHap","Mhu","Mhap","Hhu","HHap","RWhu","RWHap"),		
+  time_per_trial = c(4.6,4.6,3.8,3.8,1.7,1.7,1,1)
+)
+sorted_labels = factor(ui_combo_plot_v2$ui_combo,levels = c("Lhu","LHap","Mhu","Mhap","Hhu","HHap","RWhu","RWHap"))
+
+# Visualization and construction of plot
+ggplot(ui_combo_plot_v2, aes(sorted_labels,time_per_trial, group = 1, color=sorted_labels))+
+  geom_line(color='black',size=1) +
+  geom_point(size = 4) +
+  labs(x = "User Interface Combination", y = "Times Per Trial (s)",
+       title = "User Interface Combination Plot v2", 
+       subtitle = "Figure 8",
+       caption = "Figure 8: This plot displays an second interface combination plot.") + 
+  theme(axis.text=element_text(size=14,face="bold"),axis.title=element_text(size=14,face="bold")) +
+  theme(legend.title=element_blank(), 
+  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
+  plot.subtitle = element_text(color = "blue", hjust = 0.5),
+  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
+```
+</center>
+
+### FIG 9
+<center>
+``` {r echo=FALSE, message=FALSE}
+# specify log plot using ggplot
+# Variables for response function
+# plot(p,trans, ylim = c(0,1), ylab='coeff', log='x')
+
+alpha = .20
+fixedTasks = 26
+learnedTasks = 32.75
+
+# Data for putting inside dataframe 
+trials = c(1:10)
+RT = c(58.8,46.6,43.5,41.9,40.9,40.2,39.6,39.1,38.8,38.4)
+trials_per_min = 60/RT
+total_reps = c(10,13,26,40,54,69,84,99,115,130)#Generate data using formula in CSV file ( const + 10 * totals_reps)
+log_base10 = log(total_reps, base=10)
+low_values = c(43.1,40.3,38.9,38,37.4,36.9,36.6,36.2,36,35.7)#Generate data using formula in CSV file ( fixed + learned * (trials)^-alpha)
+delta_Ln =c(1.411,0.441,0.456,0.464,0.469,0.473,0.476,0.478,0.480,0.481)
+
+# Data frame is the data structure used to store data for visualize plots 
+loglogPlot = data.frame(
+trials,
+trials_per_min,
+RT, #rounded up because option rule at the top of R code
+total_reps,
+log_base10,
+low_values,
+delta_Ln
+)
+
+# Version 1: Visualization and construction of plot (Must transform plot to a log plot to measure distance between one point to another)
+ggplot(loglogPlot, aes(x = trials)) + 
+  geom_line(aes(y = RT, color="High", group= 1), size = 1) +
+  geom_line(aes(y = low_values, color="Low to High", group= 1), size = 1) +
+  geom_line(aes(y = delta_Ln, color="Low", group= 1), size = 1) +
+  labs(x = "Blocks of 10 min.", y = "Response Time (s)",
+       title = "Log Log Plot", 
+       subtitle = "Figure 9",
+       caption = "Figure 9: This plot displays a loglog plot.") + 
+  scale_x_continuous(trans = 'log10') +
+  scale_y_continuous(trans = 'log10') +
+  annotation_logticks() +
+  theme(axis.text=element_text(size=14,face="bold"),axis.title=element_text(size=14,face="bold")) +
+  theme(legend.title=element_blank(), 
+  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
+  plot.subtitle = element_text(color = "blue", hjust = 0.5),
+  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
+
+print (loglogPlot)# Print data from log log dataframe
+
+```
+</center>
+
+<!-- 
+fixedTasks <- 10
+learnedTasks <- 20
+Learnable <- 10
+learnedTasks <- 20
+For totalreps = 1 to 1000
+alpha <- .2
+
+For totalreps = 1 to 1000
+Points <- use formula
+pointsA[totalresps] <- formula(….., totalReps)
+
+parameters
+Power law as a formula
+generate the points
+Plot the points
+
+Result: 
+Plot trials,pointsA
+-->
+
+### FIG 10
+<center>
+``` {r echo=FALSE, message=FALSE}
+
+# Variables for response function
+alpha = .20
+fixedTasks = 26
+learnedTasks = 4
+learnable = 32.75
+
+# Data for putting inside dataframe 
+trials = c(1:10)
+RT = c(58.8,46.6,43.5,41.9,40.9,40.2,39.6,39.1,38.8,38.4)
+trials_per_min = 60/RT
+total_reps = c(10,13,26,40,54,69,84,99,115,130)#Generate data using formula in CSV file ( const + 10 * totals_reps)
+totalReps = c(26,64,105,149,194,240,287,334,382,431) # Generate data using strudel formula in CSV
+RT_sec = c(23.3,15.8,14.4,13.8,13.3,13.0,12.8,12.6,12.5,12.3) # Generate data using strudel formula in CSV
+formula = fixedTasks + learnedTasks + (learnable - learnedTasks)*(totalReps^-alpha)
+
+# Data frame is the data structure used to store data for visualize plots 
+loglogPlot_v2 = data.frame(
+trials,
+RT,
+formula,
+RT_sec
+)
+
+# Version 2: Visualization and construction of plot
+ggplot(loglogPlot_v2, aes(x = trials)) + 
+  geom_line(aes(y = RT, color="High", group= 1), size = 1) +
+  geom_line(aes(y = formula, color="Low to High", group= 1), size = 1) +
+  geom_line(aes(y = RT_sec, color="Low", group= 1), size = 1) +
+  scale_x_continuous(trans = 'log10') +
+  scale_y_continuous(trans = 'log10') +
+  labs(x = "Blocks of 10 min.", y = "Response Time (s)",
+       title = "Log Log Plot v2", 
+       subtitle = "Figure 10",
+       caption = "Figure 10: This plot displays a loglog plot v2.") + 
+  scale_x_continuous(breaks=c(1:10)) +
+  ylim(1, 100) +
+  theme(axis.text=element_text(size=14,face="bold"),axis.title=element_text(size=14,face="bold")) +
+  theme(legend.title=element_blank(), 
+  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
+  plot.subtitle = element_text(color = "blue", hjust = 0.5),
+  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
+
+print (loglogPlot_v2)# Print data from log log dataframe
+
+#summary(loglogPlot)
+#https://holtzy.github.io/Pimp-my-rmd/#tabs_for_sub-chapters
+```
+</center>
+
+### FIG 11
+<center>
+``` {r echo=FALSE, message=FALSE}
+
+# Variables for response function
+alpha = .20
+fixedTasks = 26
+learnedTasks = 4
+learnable = 32.75
+
+# Data for putting inside dataframe 
+trials = c(1:10)
+RT = c(58.8,46.6,43.5,41.9,40.9,40.2,39.6,39.1,38.8,38.4)
+trials_per_min = 60/RT
+total_reps = c(10,13,26,40,54,69,84,99,115,130)#Generate data using formula in CSV file ( const + 10 * totals_reps)
+totalReps = c(26,64,105,149,194,240,287,334,382,431) # Generate data using strudel formula in CSV
+RT_sec = c(23.3,15.8,14.4,13.8,13.3,13.0,12.8,12.6,12.5,12.3) # Generate data using strudel formula in CSV
+formula = fixedTasks + learnedTasks + (learnable - learnedTasks)*(totalReps^-alpha)
+
+# Data frame is the data structure used to store data for visualize plots 
+loglogPlot_v3 = data.frame(
+trials,
+RT,
+formula,
+RT_sec
+)
+
+# Version 2: Visualization and construction of plot
+ggplot(loglogPlot_v3, aes(x = trials)) + 
+  geom_line(aes(y = RT, color="High", group= 1), size = 1) +
+  geom_line(aes(y = formula, color="Low to High", group= 1), size = 1) +
+  geom_line(aes(y = RT_sec, color="Low", group= 1), size = 1) +
+  labs(x = "Blocks of 10 min.", y = "Response Time (s)",
+       title = "Log Log Plot v3", 
+       subtitle = "Figure 11",
+       caption = "Figure 11: This plot displays a loglog plot v3.") + 
+  scale_x_continuous(breaks=c(1:10)) +
+  ylim(0, 70) +
+  theme(axis.text=element_text(size=14,face="bold"),axis.title=element_text(size=14,face="bold")) +
+  theme(legend.title=element_blank(), 
+  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
+  plot.subtitle = element_text(color = "blue", hjust = 0.5),
+  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
+
+print (loglogPlot_v3)# Print data from log log dataframe
+
+#summary(loglogPlot)
+#https://holtzy.github.io/Pimp-my-rmd/#tabs_for_sub-chapters
+```
+
+``` {r echo=FALSE, message=FALSE}
+fidelity_df = data.frame(
+  step0= c("Insert Fault"), 
+  step1= c("Approach System"),
+  step2= c("Open Cabinet"),
+  step3= c("Ground Yourself"),
+  step4= c("Check Front Panel"),
+  step5= c("Choose Tray"),
+  step6= c("Open Tray"),
+  step7= c("Check Light"),
+  step8= c("If off, have answer;If no, go to next light"),
+  step9= c("Check Light;Overdriven Amp Fault"),
+  step10= c("Recognize Fault"),
+  step11= c("Indicate Fault")
+)
+
+#print (fidelity_df)
+
+```
+
+
+``` {r echo=FALSE, message=FALSE}
+# SOURCES
+# [1] https://holtzy.github.io/Pimp-my-rmd/#tabs_for_sub-chapters
+# [2] https://en.wikipedia.org/wiki/Power_law_of_practice
+# [3] https://www.statisticshowto.com/power-law/#:~:text=The%20power%20law%20(also%20called,4%20to%2016%20inches%20squared).
+
+```
+</center>
+
+### UPDATES
 * **Update 07/28/20**
   + Successfully sorted categorical data with factor function
   + Added more plots & better visualization aspects
@@ -68,341 +553,14 @@ knitr::opts_chunk$set(echo = TRUE)
   + Renamed Strudel plots
   + Changed label visualization
   
-<br>
-
-### Libraries
-```{r message=FALSE}
-library(dplyr)
-library(ggplot2)
-library(tidyr)
-
-# options(max.print=1000000)
-```
-
-## Results {.tabset}
-
-### FIG 1
-<center>
-```{r echo=FALSE}
-# This plot displays a simple learning curve plot of 1-10 trials using the response function from strudel analysis.
-
-# Variables for response function
-alpha = 0.02
-fixedTasks = 26
-learnedTasks = 32.75
-
-# Data frame is the data structure used to store data for visualize plots 
-learning_curve = data.frame(
-  labels = c(1:10),
-  respFunc = fixedTasks + (learnedTasks*((c(1:10))^-alpha))
-)
-
-ggplot(learning_curve, aes(x = labels, y = respFunc)) +
-  #labs(x = "Trials", y = "Response Time") + #response time, task time
-  labs(x = "Trials", y = "Response Time",
-       title = "Learning Curve Plot", 
-       subtitle = "Figure 1",
-       caption = "Figure 1: This plot displays a simple learning curve plot of 1-10\n trials using the response function from strudel analysis.") +
-  geom_line(color="green", size=1) + 
-  geom_point(size = 2) +
-  ylim(57, 60) +
-  scale_x_continuous(breaks=c(1:10)) + 
-  theme(legend.title=element_blank(), 
-  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
-  plot.subtitle = element_text(color = "blue", hjust = 0.5),
-  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
-
-```
-</center>
-
-### FIG 2
-<center>
-``` {r echo=FALSE}
-# This plot displays a learning curve plot of 1-2000 trials using the response function   from strudel analysis.
-
-# Data frame is the data structure used to store data for visualize plots 
-larger_learning_curve = data.frame(
-  labels = c(1:2000),
-  respFunc = fixedTasks + (learnedTasks*((c(1:2000))^-alpha))
-)
-
-# Visualization and construction of plot
-ggplot(larger_learning_curve, aes(x = labels, y = respFunc)) + 
-  labs(x = "Trials", y = "Response Time(s)",
-       title = "Larger Learning Curve Plot (1-2000 Datapoints)", 
-       subtitle = "Figure 2",
-       caption = "Figure 2: This plot displays a learning curve plot of 1-2000\n trials using the response function from strudel analysis.") +
-  geom_line() +
-  geom_point(size=1) +
-  theme_bw() + 
-  theme(legend.title=element_blank(), 
-  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
-  plot.subtitle = element_text(color = "blue", hjust = 0.5),
-  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
-
-```
-</center>
-
-### FIG 3
-<center>
-``` {r echo=FALSE}
-# This plot displays a Hifi and Lofi plot from strudel analysis.
-
-# Data frame is the data structure used to store data for visualize plots 
-two_line_plot = data.frame( #Use function to generate plots
-  time_blocks = c(1:10),
-  lofi_resp_time = c(11.8,5.5,4.3,3.8,3.5,3.2,3.1,2.9,2.8,2.7),
-  hifi_resp_time = c(13.75,7.807,5.544,4.756,4.316,4.022,3.805,3.635,3.497,3.382)
-)
-
-# Visualization and construction of plot
-ggplot(two_line_plot, aes(x=time_blocks)) +
-  geom_line(aes(y=lofi_resp_time, color="Lofi"), size = 1)+ 
-  geom_line(aes(y=hifi_resp_time,color="Hifi"),size=1) + 
-  labs(x = "Trials", y = "Response Time(s)",
-       title = "HiFi and LoFi Curves", 
-       subtitle = "Figure 3",
-       caption = "Figure 3: This plot displays a Hifi and Lofi plots.") + 
-  scale_x_continuous(breaks=c(1:10)) +
-  theme_bw() + 
-  theme(legend.title=element_blank(), 
-  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
-  plot.subtitle = element_text(color = "blue", hjust = 0.5),
-  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
-```
-</center>
-
-### FIG 4
-<center>
-``` {r echo=FALSE}
-# This plot displays a 3 learning curve plots of 1-10 trials using the response function and data from strudel analysis.
-
-# Variables for response function
-alpha = .20
-fixedTasks = 26
-learnedTasks = 32.75
-
-# Data frame is the data structure used to store data for visualize plots 
-multi_learning_curve = data.frame(
-  labels = c(1:10),
-  respFunc = fixedTasks + (learnedTasks*((c(1:10))^-alpha)),#Function working for this
-  respFunc2 = c(40.5,37.4,36,35.2,34.6,34.1,33.8,33.5,33.2,33),#Change to working function
-  respFunc3 = c(23.3,14.5,13.1,12.4,12,11.7,11.5,11.3,11.1,11)#Change to working function
-)
-
-# Visualization and construction of plot
-ggplot(multi_learning_curve, aes(x = labels)) + 
-  geom_line(aes(y = respFunc, color="High", group= 1), size = 2) +
-  geom_line(aes(y = respFunc2, color="Low", group= 2), size = 2) +
-  geom_line(aes(y = respFunc3, color="Low-to-High", group= 3), size = 2) +
-  labs(x = "Trials", y = "Response Time (s)",
-       title = "Multi-Complex Learning Curve Plot", 
-       subtitle = "Figure 4",
-       caption = "Figure 4: This plot displays a 3 learning curve plots of 1-10 trials.") + 
-  scale_x_continuous(breaks=c(1:10)) +
-  theme_light() + 
-  theme(legend.title=element_blank(), 
-  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
-  plot.subtitle = element_text(color = "blue", hjust = 0.5),
-  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
-
-```
-</center>
-
-### FIG 5
-<center>
-``` {r echo=FALSE}
-# This plot displays fault mixed learning plot using the data from strudel analysis.
-
-# Data frame is the data structure used to store data for visualize plots 
-fault_mixed_learning_plot = data.frame(
-  labels = c("Low", "High", "HHap", "RWhu", "RWHap"),
-  data = c(23.3,58.75,0,0,0)
-)
-
-sorted_labels = factor(fault_mixed_learning_plot$labels,levels = c("Low", "High", "HHap", "RWhu", "RWHap"))# Sorts labels using factor function 
-
-# Visualization and construction of plot
-ggplot(fault_mixed_learning_plot, aes(x = sorted_labels, y = data, color=sorted_labels, group= 1)) + 
-  geom_line() +
-  geom_point(size = 4) +
-  labs(x = "Interface Type",y = "Time Per Trial",
-       title = "Simple Fault Mixed Learning Plot", 
-       subtitle = "Figure 5",
-       caption = "Figure 5: This plot displays fault mixed learning plot.") + 
-  theme_bw() + 
-  theme(legend.title=element_blank(), 
-  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
-  plot.subtitle = element_text(color = "blue", hjust = 0.5),
-  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
-```
-</center>
-
-### FIG 6
-<center>
-``` {r echo=FALSE}
-# This plot displays a second fault mixed learning plot using the data from strudel analysis.
-
-# Data frame is the data structure used to store data for visualize plots 
-fault_mixed_learning_plot_v2 = data.frame(
-  labels = c("Low", "High", "HHap", "RWhu", "RWHap"),
-  data = c(2.6,1,0,0,0)
-)
-
-sorted_labels = factor(fault_mixed_learning_plot_v2$labels,levels = c("Low", "High", "HHap", "RWhu", "RWHap"))# Sorts labels using factor function 
-
-# Visualization and construction of plot
-ggplot(fault_mixed_learning_plot_v2, aes(x = sorted_labels, y = data, color=sorted_labels, group= 1)) + 
-  geom_line() +
-  labs(x = "Interface Type", y = "Time Per Trial",
-       title = "Simple Fault Mixed Learning Plot v2", 
-       subtitle = "Figure 6",
-       caption = "Figure 6: This plot displays a second fault mixed learning plot.") + 
-  geom_point(size = 4) +
-  theme_gray()+ 
-  theme(legend.title=element_blank(), 
-  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
-  plot.subtitle = element_text(color = "blue", hjust = 0.5),
-  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
-
-```
-</center>
-
-### FIG 7
-<center>
-``` {r echo=FALSE}
-# This plot displays an interface combination plot using the data from strudel analysis.
-
-rand_values = runif(2000, min=0, max=61)#Generates Random Values N=2000, i = 0-61
-
-# Data frame is the data structure used to store data for visualize plots 
-ui_combo_plot = data.frame(
-  id = c(1:8),
-  ui_combo = 	c("Lhu","LHap","Mhu","Mhap","Hhu","HHap","RWhu","RWHap"),		
-  time_per_trial = c(11.75,12.95,15.95,15.95,13.75,35.4,60.25,60.25), 
-  stringsAsFactors = FALSE
-)
-sorted_labels = factor(ui_combo_plot$ui_combo,levels = c("Lhu","LHap","Mhu","Mhap","Hhu","HHap","RWhu","RWHap"))
-
-# Visualization and construction of plot
-ggplot(ui_combo_plot, aes(sorted_labels,time_per_trial, group = 1, color=sorted_labels))+
-  geom_line(color='black',size=1) +
-  geom_point(size = 4) +
-  labs(x = "User Interface Combination", y = "Times Per Trial (s)",
-       title = "User Interface Combination Plot", 
-       subtitle = "Figure 7",
-       caption = "Figure 7: This plot displays an interface combination plot.") + 
-  theme_gray() + 
-  theme(legend.title=element_blank(), 
-  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
-  plot.subtitle = element_text(color = "blue", hjust = 0.5),
-  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
-```
-</center>
-
-### FIG 8
-<center>
-``` {r echo=FALSE}
-# This plot displays an second interface combination plot using the data from strudel analysis.
-
-# Data frame is the data structure used to store data for visualize plots 
-ui_combo_plot_v2 = data.frame(
-  id = c(1:8),
-  ui_combo = 	c("Lhu","LHap","Mhu","Mhap","Hhu","HHap","RWhu","RWHap"),		
-  time_per_trial = c(4.6,4.6,3.8,3.8,1.7,1.7,1,1)
-)
-sorted_labels = factor(ui_combo_plot_v2$ui_combo,levels = c("Lhu","LHap","Mhu","Mhap","Hhu","HHap","RWhu","RWHap"))
-
-# Visualization and construction of plot
-ggplot(ui_combo_plot_v2, aes(sorted_labels,time_per_trial, group = 1, color=sorted_labels))+
-  geom_line(color='black',size=1) +
-  geom_point(size = 4) +
-  labs(x = "User Interface Combination", y = "Times Per Trial (s)",
-       title = "User Interface Combination Plot v2", 
-       subtitle = "Figure 8",
-       caption = "Figure 8: This plot displays an second interface combination plot.") + 
-  theme_minimal() + 
-  theme(legend.title=element_blank(), 
-  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
-  plot.subtitle = element_text(color = "blue", hjust = 0.5),
-  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
-```
-</center>
-
-### FIG 9
-<center>
-``` {r echo=FALSE, message=FALSE}
-# This plot displays a random plot of 10 trials 
-
-# Random Plot 
-efforts = runif(10, min=0, max=10)
-
-# Data frame is the data structure used to store data for visualize plots 
-logPlot = data.frame(
-  eff = efforts,
-  Y = c(1:10)
-)
-
-# Visualization and construction of plot
-ggplot(data = logPlot, aes(x = efforts, y = Y, color=Y)) +
-  geom_line() +
-  geom_point() +
-  labs(x = "Trials", y = "Response Time",
-       title = "Random Plot", 
-       subtitle = "Figure 9",
-       caption = "Figure 9: This plot displays a random plot of 10 trials.") + 
-  scale_x_continuous(breaks=c(1:10)) +
-  scale_y_continuous(breaks=c(1:10)) +
-  geom_smooth(method = "lm", se = FALSE)  + 
-  theme(
-  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
-  plot.subtitle = element_text(color = "blue", hjust = 0.5),
-  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
-
-#https://holtzy.github.io/Pimp-my-rmd/#tabs_for_sub-chapters
-```
-
-### FIG 10
-<center>
-``` {r echo=FALSE, message=FALSE}
-# This plot displays an log plot using the data from strudel analysis.
-
-efforts = runif(10, min=0, max=10)
-
-# Data frame is the data structure used to store data for visualize plots 
-logPlot = data.frame(
-  eff = efforts,
-  Y = c(1:10)
-)
-
-# Visualization and construction of plot
-ggplot(data = logPlot, aes(x = efforts, y = Y, color=Y)) + 
-  geom_line() +
-  geom_point() +
-  scale_x_continuous(breaks=c(1:10)) +
-  scale_y_continuous(breaks=c(1:10)) +
-  labs(x = "Trials", y = "Response Time",
-       title = "Log Log Plot", 
-       subtitle = "Figure 10",
-       caption = "Figure 10: This plot displays an log plot.") + 
-  geom_smooth(method = "lm", se = FALSE) + 
-  theme(
-  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
-  plot.subtitle = element_text(color = "blue", hjust = 0.5),
-  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
-
-# !!! add descriptions to graphs, and change names of tabs
-
-#https://holtzy.github.io/Pimp-my-rmd/#tabs_for_sub-chapters
-```
-
-``` {r echo=FALSE, message=FALSE}
-# SOURCES
-# [1] https://holtzy.github.io/Pimp-my-rmd/#tabs_for_sub-chapters
-# [2] https://en.wikipedia.org/wiki/Power_law_of_practice
-```
-
-</center>
+* **Update 09/02/20**
+  + Constructed log log plot from strudel analysis
+  + Updated plots visualizations
+  
+* **Update 09/09/20**
+  + ! Make x.y labels bigger
+  + ! Use function to generate 1000 trials
+  + ! Change high to lo labels and low labels fig 9-11
 
 ## {-}
 
