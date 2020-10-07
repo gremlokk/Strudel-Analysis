@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 </center>
 
 #### **PROJECT DESCRIPTION**
-  What is the effect of level of simulation fidelity on learning
+  <h4>What is the effect of level of simulation fidelity on learning
   and then on performance in the target task? We consider an
   example of an electronic maintenance training system with
   two levels of fidelity: a high fidelity (HiFi) simulation that
@@ -34,9 +34,12 @@ knitr::opts_chunk$set(echo = TRUE)
   appear to not be adversely affected. We note factors that
   could influence this transfer (i.e., subtasks included in each
   simulation), and how this approach could be extended
+  
   <br><br>
- This document is a visual analysis of the Strudel data models provided
- in the Ritter paper: fidelity on learning.
+  This document is a visual analysis of the Strudel data models provided
+  in the Ritter paper: fidelity on learning.
+  </h4>
+
 
 ##### **Link To Paper:** [Click Here](http://acs.ist.psu.edu/papers/ritterM20.pdf)
 
@@ -70,19 +73,22 @@ learning_curve = data.frame(
 )
 
 ggplot(learning_curve, aes(x = labels, y = respFunc)) +
-  labs(x = "Trials", y = "Response Time(s)",
-       title = "Learning Curve Plot", 
-       subtitle = "Figure 1",
-       caption = "Figure 1: This plot displays a simple learning curve plot of 1-10\n trials using the response function from strudel analysis.") +
+  labs(
+    x = "Trials", y = "Response Time(s)",
+    title = "Learning Curve Plot", 
+    subtitle = "Figure 1",
+    caption = "Figure 1: This plot displays a simple learning curve plot of 1-10\n trials using the response function from strudel analysis.") +
   geom_line(color="green", size=1) + 
   geom_point(size = 2) +
   ylim(57, 60) +
   scale_x_continuous(breaks=c(1:10)) + 
-  theme(axis.text=element_text(size=14,face="bold"),axis.title=element_text(size=14,face="bold")) +
-  theme(legend.title=element_blank(), 
-  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
-  plot.subtitle = element_text(color = "blue", hjust = 0.5),
-  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
+  theme(
+    axis.text=element_text(size=14,face="bold"),
+    axis.title=element_text(size=14,face="bold"),
+    legend.title=element_blank(), 
+    plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(color = "blue", hjust = 0.5),
+    plot.caption = element_text(color = "black", size = 14, hjust = 0.5))
 
 ```
 </center>
@@ -100,17 +106,19 @@ larger_learning_curve = data.frame(
 
 # Visualization and construction of plot
 ggplot(larger_learning_curve, aes(x = labels, y = respFunc)) + 
-  labs(x = "Trials", y = "Response Time(s)",
-       title = "Larger Learning Curve Plot (1-2000 Datapoints)", 
-       subtitle = "Figure 2",
-       caption = "Figure 2: This plot displays a learning curve plot of 1-2000\n trials using the response function from strudel analysis.") +
+  labs(
+    x = "Trials", y = "Response Time(s)",
+    title = "Larger Learning Curve Plot (1-2000 Datapoints)", 
+    subtitle = "Figure 2",
+    caption = "Figure 2: This plot displays a learning curve plot of 1-2000\n trials using the response function from strudel analysis.") +
   geom_line() +
   geom_point(size=1) +
   theme(axis.text=element_text(size=14,face="bold"),axis.title=element_text(size=14,face="bold")) +
-  theme(legend.title=element_blank(), 
-  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
-  plot.subtitle = element_text(color = "blue", hjust = 0.5),
-  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
+  theme(
+    legend.title=element_blank(), 
+    plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(color = "blue", hjust = 0.5),
+    plot.caption = element_text(color = "black", size = 14, hjust = 0.5))
 
 ```
 </center>
@@ -131,16 +139,20 @@ two_line_plot = data.frame( #Use function to generate plots
 ggplot(two_line_plot, aes(x=time_blocks)) +
   geom_line(aes(y=lofi_resp_time, color="Lofi"), size = 1)+ 
   geom_line(aes(y=hifi_resp_time,color="Hifi"),size=1) + 
-  labs(x = "Trials", y = "Response Time(s)",
-       title = "HiFi and LoFi Curves", 
-       subtitle = "Figure 3",
-       caption = "Figure 3: This plot displays a Hifi and Lofi plots.") + 
+  labs(
+    x = "Trials", y = "Response Time(s)",
+    title = "HiFi and LoFi Curves", 
+    subtitle = "Figure 3",
+    caption = "Figure 3: This plot displays a Hifi and Lofi plots.") + 
   scale_x_continuous(breaks=c(1:10)) +
-  theme(axis.text=element_text(size=14,face="bold"),axis.title=element_text(size=14,face="bold")) +
-  theme(legend.title=element_blank(), 
-  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
-  plot.subtitle = element_text(color = "blue", hjust = 0.5),
-  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
+  theme(
+    axis.text=element_text(size=14,face="bold"),
+    axis.title=element_text(size=14,face="bold"),
+    legend.title=element_blank(), 
+    legend.text=element_text(size=14),
+    plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(color = "blue", hjust = 0.5),
+    plot.caption = element_text(color = "black", size = 14, hjust = 0.5))
 ```
 </center>
 
@@ -167,16 +179,19 @@ ggplot(multi_learning_curve, aes(x = labels)) +
   geom_line(aes(y = respFunc, color="High", group= 1), size = 2) +
   geom_line(aes(y = respFunc2, color="Low", group= 2), size = 2) +
   geom_line(aes(y = respFunc3, color="Low-to-High", group= 3), size = 2) +
-  labs(x = "Trials", y = "Response Time (s)",
-       title = "Multi-Complex Learning Curve Plot", 
-       subtitle = "Figure 4",
-       caption = "Figure 4: This plot displays a 3 learning curve plots of 1-10 trials.") + 
+  labs(
+    x = "Trials", y = "Response Time (s)",
+    title = "Multi-Complex Learning Curve Plot", 
+    subtitle = "Figure 4",
+    caption = "Figure 4: This plot displays a 3 learning curve plots of 1-10 trials.") + 
   scale_x_continuous(breaks=c(1:10)) +
   theme(axis.text=element_text(size=14,face="bold"),axis.title=element_text(size=14,face="bold")) +
-  theme(legend.title=element_blank(), 
-  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
-  plot.subtitle = element_text(color = "blue", hjust = 0.5),
-  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
+  theme(
+    legend.title=element_blank(), 
+    legend.text=element_text(size=14),
+    plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(color = "blue", hjust = 0.5),
+    plot.caption = element_text(color = "black", size = 14, hjust = 0.5))
 
 ```
 </center>
@@ -198,15 +213,18 @@ sorted_labels = factor(fault_mixed_learning_plot$labels,levels = c("Low", "High"
 ggplot(fault_mixed_learning_plot, aes(x = sorted_labels, y = data, color=sorted_labels, group= 1)) + 
   geom_line() +
   geom_point(size = 4) +
-  labs(x = "Interface Type",y = "Time Per Trial",
-       title = "Simple Fault Mixed Learning Plot", 
-       subtitle = "Figure 5",
-       caption = "Figure 5: This plot displays fault mixed learning plot.") + 
+  labs(
+    x = "Interface Type",y = "Time Per Trial",
+    title = "Simple Fault Mixed Learning Plot", 
+    subtitle = "Figure 5",
+    caption = "Figure 5: This plot displays fault mixed learning plot.") + 
   theme(axis.text=element_text(size=14,face="bold"),axis.title=element_text(size=14,face="bold")) +
-  theme(legend.title=element_blank(), 
-  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
-  plot.subtitle = element_text(color = "blue", hjust = 0.5),
-  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
+  theme(
+    legend.title=element_blank(),
+    legend.text=element_text(size=14),
+    plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(color = "blue", hjust = 0.5),
+    plot.caption = element_text(color = "black", size = 14, hjust = 0.5))
 ```
 </center>
 
@@ -226,16 +244,19 @@ sorted_labels = factor(fault_mixed_learning_plot_v2$labels,levels = c("Low", "Hi
 # Visualization and construction of plot
 ggplot(fault_mixed_learning_plot_v2, aes(x = sorted_labels, y = data, color=sorted_labels, group= 1)) + 
   geom_line() +
-  labs(x = "Interface Type", y = "Time Per Trial",
-       title = "Simple Fault Mixed Learning Plot v2", 
-       subtitle = "Figure 6",
-       caption = "Figure 6: This plot displays a second fault mixed learning plot.") + 
+  labs(
+    x = "Interface Type", y = "Time Per Trial",
+    title = "Simple Fault Mixed Learning Plot v2", 
+    subtitle = "Figure 6",
+    caption = "Figure 6: This plot displays a second fault mixed learning plot.") + 
   geom_point(size = 4) +
   theme(axis.text=element_text(size=14,face="bold"),axis.title=element_text(size=14,face="bold")) +
-  theme(legend.title=element_blank(), 
-  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
-  plot.subtitle = element_text(color = "blue", hjust = 0.5),
-  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
+  theme(
+    legend.title=element_blank(), 
+    legend.text=element_text(size=14),
+    plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(color = "blue", hjust = 0.5),
+    plot.caption = element_text(color = "black", size = 14, hjust = 0.5))
 
 ```
 </center>
@@ -260,15 +281,18 @@ sorted_labels = factor(ui_combo_plot$ui_combo,levels = c("Lhu","LHap","Mhu","Mha
 ggplot(ui_combo_plot, aes(sorted_labels,time_per_trial, group = 1, color=sorted_labels))+
   geom_line(color='black',size=1) +
   geom_point(size = 4) +
-  labs(x = "User Interface Combination", y = "Times Per Trial (s)",
-       title = "User Interface Combination Plot", 
-       subtitle = "Figure 7",
-       caption = "Figure 7: This plot displays an interface combination plot.") + 
+  labs(
+    x = "User Interface Combination", y = "Times Per Trial (s)",
+    title = "User Interface Combination Plot", 
+    subtitle = "Figure 7",
+    caption = "Figure 7: This plot displays an interface combination plot.") + 
   theme(axis.text=element_text(size=14,face="bold"),axis.title=element_text(size=14,face="bold")) +
-  theme(legend.title=element_blank(), 
-  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
-  plot.subtitle = element_text(color = "blue", hjust = 0.5),
-  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
+  theme(
+    legend.title=element_blank(), 
+    legend.text=element_text(size=14),
+    plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(color = "blue", hjust = 0.5),
+    plot.caption = element_text(color = "black", size = 14, hjust = 0.5))
 ```
 </center>
 
@@ -289,15 +313,18 @@ sorted_labels = factor(ui_combo_plot_v2$ui_combo,levels = c("Lhu","LHap","Mhu","
 ggplot(ui_combo_plot_v2, aes(sorted_labels,time_per_trial, group = 1, color=sorted_labels))+
   geom_line(color='black',size=1) +
   geom_point(size = 4) +
-  labs(x = "User Interface Combination", y = "Times Per Trial (s)",
-       title = "User Interface Combination Plot v2", 
-       subtitle = "Figure 8",
-       caption = "Figure 8: This plot displays an second interface combination plot.") + 
+  labs(
+    x = "User Interface Combination", y = "Times Per Trial (s)",
+    title = "User Interface Combination Plot v2", 
+    subtitle = "Figure 8",
+    caption = "Figure 8: This plot displays an second interface combination plot.") + 
   theme(axis.text=element_text(size=14,face="bold"),axis.title=element_text(size=14,face="bold")) +
-  theme(legend.title=element_blank(), 
-  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
-  plot.subtitle = element_text(color = "blue", hjust = 0.5),
-  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
+  theme(
+    legend.title=element_blank(), 
+    legend.text=element_text(size=14),
+    plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(color = "blue", hjust = 0.5),
+    plot.caption = element_text(color = "black", size = 14, hjust = 0.5))
 ```
 </center>
 
@@ -337,18 +364,22 @@ ggplot(loglogPlot, aes(x = trials)) +
   geom_line(aes(y = RT, color="High", group= 1), size = 1) +
   geom_line(aes(y = low_values, color="Low to High", group= 1), size = 1) +
   geom_line(aes(y = delta_Ln, color="Low", group= 1), size = 1) +
-  labs(x = "Blocks of 10 min.", y = "Response Time (s)",
-       title = "Log Log Plot", 
-       subtitle = "Figure 9",
-       caption = "Figure 9: This plot displays a loglog plot.") + 
+  labs(
+    x = "Blocks of 10 min.",
+    y = "Response Time (s)",
+    title = "Log Log Plot", 
+    subtitle = "Figure 9",
+    caption = "Figure 9: This plot displays a loglog plot.") + 
   scale_x_continuous(trans = 'log10') +
   scale_y_continuous(trans = 'log10') +
   annotation_logticks() +
   theme(axis.text=element_text(size=14,face="bold"),axis.title=element_text(size=14,face="bold")) +
-  theme(legend.title=element_blank(), 
-  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
-  plot.subtitle = element_text(color = "blue", hjust = 0.5),
-  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
+  theme(
+    legend.title=element_blank(), 
+    legend.text=element_text(size=14),
+    plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(color = "blue", hjust = 0.5),
+    plot.caption = element_text(color = "black", size = 14, hjust = 0.5))
 
 print (loglogPlot)# Print data from log log dataframe
 
@@ -379,57 +410,32 @@ Plot trials,pointsA
 ### FIG 10
 <center>
 ``` {r echo=FALSE, message=FALSE}
+#THIS FIGURE APPLIES RESP FUNCTION OF 1-1000 POINTS
 
 # Variables for response function
 alpha = .20
 fixedTasks = 26
-learnedTasks = 4
-learnable = 32.75
+learnedTasks = 32.75
 
-# Data for putting inside dataframe 
-trials = c(1:10)
-RT = c(58.8,46.6,43.5,41.9,40.9,40.2,39.6,39.1,38.8,38.4)
-trials_per_min = 60/RT
-total_reps = c(10,13,26,40,54,69,84,99,115,130)#Generate data using formula in CSV file ( const + 10 * totals_reps)
-totalReps = c(26,64,105,149,194,240,287,334,382,431) # Generate data using strudel formula in CSV
-RT_sec = c(23.3,15.8,14.4,13.8,13.3,13.0,12.8,12.6,12.5,12.3) # Generate data using strudel formula in CSV
-formula = fixedTasks + learnedTasks + (learnable - learnedTasks)*(totalReps^-alpha)
+datapoints = c(1:10) #generates a flattened list of 1-10 points (change to 1000 points)
+Respfn = fixedTasks + (learnedTasks*((datapoints)^-alpha))#apply function to 10 datapoints (i.e., flattened list)
 
 # Data frame is the data structure used to store data for visualize plots 
 loglogPlot_v2 = data.frame(
-trials,
-RT,
-formula,
-RT_sec
+ id = c(1:10),
+ trials_per_min = c(1.0,1.3,1.4,1.4,1.5,1.5,1.5,1.5,1.5,1.6),
+ data = Respfn
 )
 
-# Version 2: Visualization and construction of plot
-ggplot(loglogPlot_v2, aes(x = trials)) + 
-  geom_line(aes(y = RT, color="High", group= 1), size = 1) +
-  geom_line(aes(y = formula, color="Low to High", group= 1), size = 1) +
-  geom_line(aes(y = RT_sec, color="Low", group= 1), size = 1) +
-  scale_x_continuous(trans = 'log10') +
-  scale_y_continuous(trans = 'log10') +
-  labs(x = "Blocks of 10 min.", y = "Response Time (s)",
-       title = "Log Log Plot v2", 
-       subtitle = "Figure 10",
-       caption = "Figure 10: This plot displays a loglog plot v2.") + 
-  scale_x_continuous(breaks=c(1:10)) +
-  ylim(1, 100) +
-  theme(axis.text=element_text(size=14,face="bold"),axis.title=element_text(size=14,face="bold")) +
-  theme(legend.title=element_blank(), 
-  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
-  plot.subtitle = element_text(color = "blue", hjust = 0.5),
-  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
+plot(x = loglogPlot_v2$id, y=loglogPlot_v2$data)
 
-print (loglogPlot_v2)# Print data from log log dataframe
+print (loglogPlot_v2)#  Basic plot of respFunc
 
-#summary(loglogPlot)
 #https://holtzy.github.io/Pimp-my-rmd/#tabs_for_sub-chapters
 ```
 </center>
 
-### FIG 11
+<!-- ### FIG 11
 <center>
 ``` {r echo=FALSE, message=FALSE}
 
@@ -461,17 +467,20 @@ ggplot(loglogPlot_v3, aes(x = trials)) +
   geom_line(aes(y = RT, color="High", group= 1), size = 1) +
   geom_line(aes(y = formula, color="Low to High", group= 1), size = 1) +
   geom_line(aes(y = RT_sec, color="Low", group= 1), size = 1) +
-  labs(x = "Blocks of 10 min.", y = "Response Time (s)",
-       title = "Log Log Plot v3", 
-       subtitle = "Figure 11",
-       caption = "Figure 11: This plot displays a loglog plot v3.") + 
+  labs(
+    x = "Blocks of 10 min.", y = "Response Time (s)",
+    title = "Log Log Plot v3", 
+    subtitle = "Figure 11",
+    caption = "Figure 11: This plot displays a loglog plot v3.") + 
   scale_x_continuous(breaks=c(1:10)) +
   ylim(0, 70) +
   theme(axis.text=element_text(size=14,face="bold"),axis.title=element_text(size=14,face="bold")) +
-  theme(legend.title=element_blank(), 
-  plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
-  plot.subtitle = element_text(color = "blue", hjust = 0.5),
-  plot.caption = element_text(color = "black", size = 12, hjust = 0.5))
+  theme(
+    legend.title=element_blank(), 
+    legend.text=element_text(size=14),
+    plot.title = element_text(color = "red", size = 16, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(color = "blue", hjust = 0.5),
+    plot.caption = element_text(color = "black", size = 14, hjust = 0.5))
 
 print (loglogPlot_v3)# Print data from log log dataframe
 
@@ -507,7 +516,7 @@ fidelity_df = data.frame(
 # [3] https://www.statisticshowto.com/power-law/#:~:text=The%20power%20law%20(also%20called,4%20to%2016%20inches%20squared).
 
 ```
-</center>
+</center> -->
 
 ### UPDATES
 * **Update 07/28/20**
